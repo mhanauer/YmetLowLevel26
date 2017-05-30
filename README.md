@@ -2,12 +2,12 @@
 # Accompanies the book:
 #  Kruschke, J. K. (2015). Doing Bayesian Data Analysis, Second Edition: 
 #  A Tutorial with R, JAGS, and Stan. Academic Press / Elsevier.
-# This has the most updated version but won't work
+
 source("DBDA2E-utilities.R")
 
 #===============================================================================
 
-genMCMC = function( data , xName="X" , x2Name = "X2", x3Name = "X3", x4Name = "X4", x5Name = "X5", x6Name = "X6", x7Name = "X7", x8Name = "X8", x9Name = "X9", x10Name = "X10", x11Name = "X11", x12Name = "X12", x13Name="X13" , x14Name = "X14", x15Name = "X15", x16Name = "X16", x17Name = "X17", x18Name = "X18", x19Name = "X19", x20Name = "X20", x21Name = "21", x22Name = "X22", x23Name = "X23", x24Name = "X24", x25Name = "25", x26Name = "X26", yName="y" , sName="s" ,
+genMCMC = function( data , xName="X" , x2Name = "X2", x3Name = "X3", x4Name = "X4", x5Name = "X5", x6Name = "X6", x7Name = "X7", x8Name = "X8", x9Name = "X9", x10Name = "X10", x11Name = "X11", x12Name = "X12", x13Name="X13" , x14Name = "X14", x15Name = "X15", x16Name = "X16", x17Name = "X17", x18Name = "X18", x19Name = "X19", x20Name = "X20", x21Name = "X21", x22Name = "X22", x23Name = "X23", x24Name = "X24", x25Name = "25", x26Name = "X26", yName="y" , sName="s" ,
                     numSavedSteps=10000 , thinSteps = 1 , saveName=NULL ,
                     runjagsMethod=runjagsMethodDefault , 
                     nChains=nChainsDefault) { 
@@ -135,6 +135,10 @@ genMCMC = function( data , xName="X" , x2Name = "X2", x3Name = "X3", x4Name = "X
   x21sd <- sd(x21)
   x22sd <- sd(x22)
   x23sd <- sd(x23)
+  x24sd <- sd(x24)
+  x25sd <- sd(x25)
+  x26sd <- sd(x26)
+  
   ysd <- sd(y)
   for ( i in 1:length(y) ) {
   zx[i] <- ( x[i] - xm ) / xsd
@@ -169,7 +173,7 @@ genMCMC = function( data , xName="X" , x2Name = "X2", x3Name = "X3", x4Name = "X
   # Specify the model for standardized data:
   model {
   for ( i in 1:Ntotal ) {
-  zy[i] ~ dt( zbeta0[s[i]] + zbeta1[s[i]] * zx[i] + zbeta2[s[i]] * zx2[i] + zbeta3[s[i]] * zx3[i] + zbeta4[s[i]] * zx4[i]  + zbeta5[s[i]] * zx5[i] + zbeta6[s[i]] * zx6[i] + zbeta7[s[i]] * zx7[i] + zbeta8[s[i]] * zx8[i] + zbeta9[s[i]] * zx9[i] + zbeta10[s[i]] * zx10[i] + zbeta11[s[i]] * zx11[i] + zbeta12[s[i]] * zx12[i] + zbeta13[s[i]] * z13x[i] + zbeta14[s[i]] * zx14[i] + zbeta15[s[i]] * zx15[i] + zbeta16[s[i]] * zx16[i]  + zbeta17[s[i]] * zx17[i] + zbeta18[s[i]] * zx18[i] + zbeta19[s[i]] * zx19[i] + zbeta20[s[i]] * zx20[i] + zbeta21[s[i]] * zx21[i] + zbeta22[s[i]] * zx22[i] + zbeta23[s[i]] * zx23[i] + zbeta24[s[i]] * zx24[i] + zbeta25[s[i]] * zx25[i] + zbeta26[s[i]] * zx26[i], 1/zsigma^2 , nu )
+  zy[i] ~ dt( zbeta0[s[i]] + zbeta1[s[i]] * zx[i] + zbeta2[s[i]] * zx2[i] + zbeta3[s[i]] * zx3[i] + zbeta4[s[i]] * zx4[i]  + zbeta5[s[i]] * zx5[i] + zbeta6[s[i]] * zx6[i] + zbeta7[s[i]] * zx7[i] + zbeta8[s[i]] * zx8[i] + zbeta9[s[i]] * zx9[i] + zbeta10[s[i]] * zx10[i] + zbeta11[s[i]] * zx11[i] + zbeta12[s[i]] * zx12[i] + zbeta13[s[i]] * zx13[i] + zbeta14[s[i]] * zx14[i] + zbeta15[s[i]] * zx15[i] + zbeta16[s[i]] * zx16[i]  + zbeta17[s[i]] * zx17[i] + zbeta18[s[i]] * zx18[i] + zbeta19[s[i]] * zx19[i] + zbeta20[s[i]] * zx20[i] + zbeta21[s[i]] * zx21[i] + zbeta22[s[i]] * zx22[i] + zbeta23[s[i]] * zx23[i] + zbeta24[s[i]] * zx24[i] + zbeta25[s[i]] * zx25[i] + zbeta26[s[i]] * zx26[i], 1/zsigma^2 , nu )
   }
   for ( j in 1:Nsubj ) {
   zbeta0[j] ~ dnorm( zbeta0mu , 1/(zbeta0sigma)^2 )  
@@ -289,10 +293,7 @@ genMCMC = function( data , xName="X" , x2Name = "X2", x3Name = "X3", x4Name = "X
   beta24[j] <- zbeta24[j] * ysd / x24sd
   beta25[j] <- zbeta25[j] * ysd / x25sd
   beta26[j] <- zbeta26[j] * ysd / x26sd
-
-
   beta0[j] <- zbeta0[j] * ysd  + ym - zbeta1[j] * xm * ysd / xsd + zbeta2[j] * x2m * ysd / x2sd + zbeta3[j] * x3m * ysd / x3sd + zbeta4[j] * x4m * ysd / x4sd + zbeta5[j] * x5m * ysd / x5sd + zbeta6[j] * x6m * ysd / x6sd + zbeta7[j] * x7m * ysd / x7sd + zbeta8[j] * x8m * ysd / x8sd + zbeta9[j] * x9m * ysd / x9sd + zbeta10[j] * x10m * ysd / x10sd + zbeta11[j] * x11m * ysd / x11sd + zbeta12[j] * x12m * ysd / x12sd + ym - zbeta13[j] * x13m * ysd / x13sd + zbeta14[j] * x14m * ysd / x14sd + zbeta15[j] * x15m * ysd / x15sd + zbeta16[j] * x16m * ysd / x16sd + zbeta17[j] * x17m * ysd / x17sd + zbeta18[j] * x18m * ysd / x18sd + zbeta19[j] * x19m * ysd / x19sd + zbeta20[j] * x20m * ysd / x20sd + zbeta21[j] * x21m * ysd / x21sd + zbeta22[j] * x22m * ysd / x22sd + zbeta23[j] * x23m * ysd / x23sd + zbeta24[j] * x24m * ysd / x24sd + zbeta25[j] * x25m * ysd / x25sd + zbeta26[j] * x26m * ysd / x24sd
-  }
   }
   beta1mu <- zbeta1mu * ysd / xsd
   beta2mu <- zbeta2mu * ysd / x2sd
@@ -322,7 +323,7 @@ genMCMC = function( data , xName="X" , x2Name = "X2", x3Name = "X3", x4Name = "X
   beta26mu <- zbeta26mu * ysd / x26sd
 
 
-  beta0mu <- zbeta0mu * ysd  + ym - zbeta1mu * xm * ysd / xsd + zbeta2mu * x2m * ysd / x2sd + zbeta3mu * x3m * ysd / x3sd + zbeta4mu * x4m * ysd / x4sd + zbeta5mu * x5m * ysd / x5sd + zbeta6mu * x6m * ysd / x6sd + zbeta7mu * x7m * ysd / x7sd + zbeta8mu * x8m * ysd / x8sd + zbeta9mu * x9m * ysd / x9sd + zbeta10mu * x10m * ysd / x10sd + zbeta11mu * x11m * ysd / x11sd + zbeta12mu * x12m * ysd / x12sd + zbeta12mu * x12m * ysd / x12sd + zbeta13mu * x13m * ysd / x13sd + zbeta14mu * x14m * ysd / x14sd + zbeta15mu * x15m * ysd / x15sd + zbeta16mu * x16m * ysd / x16sd + zbeta17mu * x17m * ysd / x17sd + zbeta18mu * x18m * ysd / x18sd + zbeta19mu * x19m * ysd / x19sd + zbeta20mu * x20m * ysd / x20sd + zbeta21mu * x21m * ysd / x21sd + zbeta22mu * x22m * ysd / x22sd + zbeta23mu * x23m * ysd / x23sd + zbeta24mu * x43m * ysd / x24sd+ zbeta25mu * x25m * ysd / x25sd+ zbeta26mu * x26m * ysd / x26sd
+  beta0mu <- zbeta0mu * ysd  + ym - zbeta1mu * xm * ysd / xsd + zbeta2mu * x2m * ysd / x2sd + zbeta3mu * x3m * ysd / x3sd + zbeta4mu * x4m * ysd / x4sd + zbeta5mu * x5m * ysd / x5sd + zbeta6mu * x6m * ysd / x6sd + zbeta7mu * x7m * ysd / x7sd + zbeta8mu * x8m * ysd / x8sd + zbeta9mu * x9m * ysd / x9sd + zbeta10mu * x10m * ysd / x10sd + zbeta11mu * x11m * ysd / x11sd + zbeta12mu * x12m * ysd / x12sd + zbeta12mu * x12m * ysd / x12sd + zbeta13mu * x13m * ysd / x13sd + zbeta14mu * x14m * ysd / x14sd + zbeta15mu * x15m * ysd / x15sd + zbeta16mu * x16m * ysd / x16sd + zbeta17mu * x17m * ysd / x17sd + zbeta18mu * x18m * ysd / x18sd + zbeta19mu * x19m * ysd / x19sd + zbeta20mu * x20m * ysd / x20sd + zbeta21mu * x21m * ysd / x21sd + zbeta22mu * x22m * ysd / x22sd + zbeta23mu * x23m * ysd / x23sd + zbeta24mu * x24m * ysd / x24sd+ zbeta25mu * x25m * ysd / x25sd+ zbeta26mu * x26m * ysd / x26sd
   sigma <- zsigma * ysd
   }
   " # close quote for modelString
